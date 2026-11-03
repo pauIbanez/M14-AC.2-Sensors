@@ -88,7 +88,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     fun onComplete() {}
 
     fun onDeath() {
-
+        level.start()
     }
 
 }

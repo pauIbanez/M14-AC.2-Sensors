@@ -21,6 +21,8 @@ class Ball(val radius: Float = 0.4f) {
     var deathAnimTime = 0f
     val deathTime = 1f
 
+    var onDeath: () -> Unit = { TODO("Not implemented") }
+
     init {
         drawnRadius = radius
     }
@@ -34,6 +36,7 @@ class Ball(val radius: Float = 0.4f) {
             if (deathAnimTime >= deathTime) {
                 isDying = false
                 drawnRadius = 0f
+                onDeath()
                 return
             }
             val prop = deathAnimTime / deathTime
@@ -97,12 +100,15 @@ class Ball(val radius: Float = 0.4f) {
     }
 
     fun live() {
+        vel = Vector2(0f, 0f)
         drawnRadius = radius
         isAlive = true
         isDying = false
     }
 
-    fun die() {
+    fun die(onDeath: () -> Unit) {
+        this.onDeath = onDeath
+        vel = Vector2(0f, 0f)
         deathAnimTime = 0f
         isAlive = false
         isDying = true

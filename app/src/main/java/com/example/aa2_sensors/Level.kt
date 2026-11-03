@@ -80,7 +80,7 @@ class Level(val ball: Ball, val onComplete: () -> Unit, val onDeath: () -> Unit)
         }
 
         if (isTouchingHole(ball.pos)) {
-            ball.die()
+            ball.die(onDeath = { onDeath() })
         }
     }
 
@@ -108,7 +108,7 @@ class Level(val ball: Ball, val onComplete: () -> Unit, val onDeath: () -> Unit)
 
                     's' -> {
                         scope.drawRect(
-                            color = Color.Red,
+                            color = Color.DarkGray,
                             topLeft = Offset(x * scale, y * scale),
                             size = Size(scale, scale)
                         )
