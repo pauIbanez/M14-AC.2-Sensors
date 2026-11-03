@@ -6,11 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.max
+import kotlin.math.sqrt
 
-// Position, radius and velocity are in level units, not pixels
 class Ball(val radius: Float = 0.4f) {
-    // Compose state, so the Canvas redraws when these change
 
     var pos by mutableStateOf(Vector2(0f, 0f))
     var isAlive by mutableStateOf(false)
@@ -22,49 +24,45 @@ class Ball(val radius: Float = 0.4f) {
 
         vel = Vector2(vel.x + rot.y * acceleration * dt, vel.y + rot.x * acceleration * dt)
 
-        val delta = Vector2(vel.x * dt, vel.y * dt)
-        val newX = pos.x + delta.x
-        val newY = pos.y + delta.y
+        // I had a "AABB-based" collision system (though point samplig vs tile map rather than bound-box pair)
+        // However AI suggested a crcle-vs-tile, obviously better, so i let it put it in
 
-        var top = pos.y - radius
-        var bottom = pos.y + radius - 0.001f
-        var left = newX - radius + 0.01f
-        var right = newX + radius - 0.001f
+        val distance = max(abs(vel.x), abs(vel.y)) * dt
+        val steps = ceil(distance / (radius * 0.5f)).toInt().coerceAtLeast(1)
+        val stepDt = dt / steps
+
+        var x = pos.x
+        var y = pos.y
+        repeat(steps) {
+            x += vel.x * stepDt
+            y += vel.y * stepDt
+
+            for (cy in floor(y - radius).toInt()..floor(y + radius).toInt()) {
+                for (cx in floor(x - radius).toInt()..floor(x + radius).toInt()) {
+                    if (!level.isSolidAt(Vector2(cx + 0.5f, cy + 0.5f))) continue
 
 
-        var correctedX = newX
-        if (delta.x > 0) {
-            if (level.isSolidAt(Vector2(right, top)) || level.isSolidAt(Vector2(right, bottom))) {
-                correctedX = floor(right) - radius
-                vel = vel.copy(x = 0f)
-            }
-        } else if (delta.x < 0) {
-            if (level.isSolidAt(Vector2(left, top)) || level.isSolidAt(Vector2(left, bottom))) {
-                correctedX = floor(left) + 1 + radius
-                vel = vel.copy(x = 0f)
-            }
-        }
+                    val closestX = x.coerceIn(cx.toFloat(), cx + 1f)
+                    val closestY = y.coerceIn(cy.toFloat(), cy + 1f)
+                    val dx = x - closestX
+                    val dy = y - closestY
+                    val dist = sqrt(dx * dx + dy * dy)
+                    if (dist >= radius || dist == 0f) continue
 
-        top = newY - radius
-        bottom = newY + radius - 0.001f
-        left = correctedX - radius + 0.01f
-        right = correctedX + radius - 0.001f
 
-        var correctedY = newY
-        if (delta.y > 0) {
-            if (level.isSolidAt(Vector2(left, bottom)) || level.isSolidAt(Vector2(right, bottom))) {
-                correctedY = floor(bottom) - radius
-                vel = vel.copy(y = 0f)
-            }
-        } else if (delta.y < 0) {
-            if (level.isSolidAt(Vector2(left, top)) || level.isSolidAt(Vector2(right, top))) {
-                correctedY = floor(top) + 1 + radius
-                vel = vel.copy(y = 0f)
+                    val nx = dx / dist
+                    val ny = dy / dist
+                    x += nx * (radius - dist)
+                    y += ny * (radius - dist)
+
+
+                    val intoWall = vel.x * nx + vel.y * ny
+                    if (intoWall < 0) vel = Vector2(vel.x - intoWall * nx, vel.y - intoWall * ny)
+                }
             }
         }
 
-        pos = Vector2(correctedX, correctedY)
-
+        pos = Vector2(x, y)
     }
 
     fun draw(scope: DrawScope, level: Level) {
