@@ -1,4 +1,4 @@
-package com.example.aa2_sensors
+package com.example.aa2_sensors.game
 
 import android.content.Context
 

@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,7 +38,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
 
     private val ball = Ball()
-    private var level = Level(ball, onComplete = { onComplete() }, onDeath = { onDeath() })
+    private var level = Level_old(ball, onComplete = { onComplete() }, onDeath = { onDeath() })
 
     private val acceleration = 1f
     private var rot: Vector2 = Vector2(0f, 0f)
@@ -91,7 +90,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
 
 @Composable
-fun Laberinth(level: Level, onTick: (dt: Float) -> Unit, onDraw: DrawScope.() -> Unit) {
+fun Laberinth(level: Level_old, onTick: (dt: Float) -> Unit, onDraw: DrawScope.() -> Unit) {
 
     LaunchedEffect(Unit) {
         var last = withFrameNanos { it }
@@ -132,7 +131,7 @@ fun Attempts(nOfAtt: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun InGame(level: Level, onTick: (dt: Float) -> Unit, ball: Ball) {
+fun InGame(level: Level_old, onTick: (dt: Float) -> Unit, ball: Ball) {
     Box(modifier = Modifier.fillMaxSize()) {
         Laberinth(
             level,

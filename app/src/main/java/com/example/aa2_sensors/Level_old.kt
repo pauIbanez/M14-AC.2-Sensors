@@ -10,7 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
 
-class Level(val ball: Ball, val onComplete: () -> Unit, val onDeath: () -> Unit) {
+class Level_old(val ball: Ball, val onComplete: () -> Unit, val onDeath: () -> Unit) {
 
     val width = 19f
     val height = 13f

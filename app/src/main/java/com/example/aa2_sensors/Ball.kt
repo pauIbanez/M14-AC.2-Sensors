@@ -29,7 +29,7 @@ class Ball(val radius: Float = 0.4f) {
 
     private var vel = Vector2(0f, 0f)
 
-    fun update(rot: Vector2, acceleration: Float, dt: Float, level: Level) {
+    fun update(rot: Vector2, acceleration: Float, dt: Float, level: Level_old) {
         if (!isAlive) {
             if (!isDying) return
             deathAnimTime += dt
@@ -94,7 +94,7 @@ class Ball(val radius: Float = 0.4f) {
         pos = Vector2(x, y)
     }
 
-    fun draw(scope: DrawScope, level: Level) {
+    fun draw(scope: DrawScope, level: Level_old) {
         val scale = scope.size.width / level.width
         scope.drawCircle(color = Color.Red, radius = drawnRadius * scale, center = Offset(pos.x * scale, pos.y * scale))
     }
