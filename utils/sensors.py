@@ -1,6 +1,6 @@
 import socket, time, pathlib, requests
 
-PHONE = "http://192.168.16.43"   # URL phyphox shows under Remote Access
+PHONE = "http://192.168.17.52"   # URL phyphox shows under Remote Access
 token = (pathlib.Path.home() / ".emulator_console_auth_token").read_text().strip()
 
 emu = socket.create_connection(("localhost", 5554))
@@ -13,4 +13,4 @@ while True:
     if None not in (x, y, z):
         emu.sendall(f"sensor set acceleration {x}:{y}:{z}\n".encode())
         emu.recv(4096)
-    time.sleep(0.05)  # ~20 Hz
+    time.sleep(0.05)
