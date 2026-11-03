@@ -41,6 +41,16 @@ class Level {
         }
     }
 
+    fun isSolidAt(pos: Vector2): Boolean {
+        if (pos.x < 0 || pos.y < 0) return true
+
+        val x = pos.x.toInt()
+        val y = pos.y.toInt()
+        if (x >= width || y >= height) return true
+
+        return maze[y][x] == 'w'
+    }
+
 
     fun draw(scope: DrawScope) {
         val scale = scope.size.width / width
