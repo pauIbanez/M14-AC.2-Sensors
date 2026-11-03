@@ -25,3 +25,11 @@ fun Attempts(nOfAtt: Int, modifier: Modifier = Modifier) {
         fontWeight = FontWeight.Black
     )
 }
+
+
+@Composable
+fun GoBack(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Button(onClick = onClick, modifier = modifier) {
+        Text("HOME")
+    }
+}

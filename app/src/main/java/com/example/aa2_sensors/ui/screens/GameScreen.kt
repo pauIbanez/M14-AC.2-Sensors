@@ -14,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.example.aa2_sensors.game.Level
 import com.example.aa2_sensors.game.LevelData
+import com.example.aa2_sensors.game.Status
 import com.example.aa2_sensors.sensors.rememberAccelerometer
 import com.example.aa2_sensors.ui.game.Attempts
 import com.example.aa2_sensors.ui.game.GameCanvas
+import com.example.aa2_sensors.ui.game.GoBack
 import com.example.aa2_sensors.ui.game.Restart
 
 @Composable
@@ -41,5 +43,9 @@ fun GameScreen(levelName: String, onExit: () -> Unit) {
         GameCanvas(level)
         Restart(onClick = { level = Level(level.levelData) })
         Attempts(level.attempts, Modifier.align(Alignment.TopEnd))
+        if (level.status == Status.Won) GoBack(
+            { onExit() },
+            modifier = Modifier.align(Alignment.Center)
+        )
     }
 }
