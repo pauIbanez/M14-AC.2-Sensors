@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
 
     private val ball = Ball()
-    private var level = Level(ball)
+    private var level = Level(ball, onComplete = { onComplete() }, onDeath = { onDeath() })
 
     private val acceleration = 1f
     private var rot: Vector2 = Vector2(0f, 0f)
@@ -57,7 +57,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                         Laberinth(
                             level,
                             onTick = { dt -> onTick(dt) },
-                            onEnd = { onEnd() },
                             onDraw = {
                                 level.draw(this)
                                 ball.draw(this, level)
@@ -86,12 +85,17 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         ball.update(rot, acceleration, dt, level)
     }
 
-    fun onEnd() {}
+    fun onComplete() {}
+
+    fun onDeath() {
+
+    }
+
 }
 
 
 @Composable
-fun Laberinth(level: Level, onTick: (dt: Float) -> Unit, onEnd: () -> Unit, onDraw: DrawScope.() -> Unit) {
+fun Laberinth(level: Level, onTick: (dt: Float) -> Unit, onDraw: DrawScope.() -> Unit) {
 
     LaunchedEffect(Unit) {
         var last = withFrameNanos { it }
