@@ -6,7 +6,7 @@ import android.content.Context
 class LevelData(val tiles: List<String>) {
     companion object {
         fun load(context: Context, name: String) = LevelData(
-            context.assets.open("levels/$name").bufferedReader()
+            context.assets.open("levels/$name.lvl").bufferedReader()
                 .readLines()
                 .filter { it.isNotBlank() }
         )
