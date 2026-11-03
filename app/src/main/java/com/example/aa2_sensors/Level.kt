@@ -42,23 +42,19 @@ class Level(val ball: Ball, val onComplete: () -> Unit, val onDeath: () -> Unit)
         }
     }
 
-    fun isSolidAt(pos: Vector2): Boolean {
-        if (pos.x < 0 || pos.y < 0) return true
+    fun isSolidAt(pos: Vector2) = isIn('w', pos)
 
-        val x = pos.x.toInt()
-        val y = pos.y.toInt()
-        if (x >= width || y >= height) return true
+    fun isTouchingHole(pos: Vector2) = isIn('h', pos)
 
-        return maze[y][x] == 'w'
-    }
+    fun isInEnd(pos: Vector2) = isIn('e', pos)
 
-    fun isTouchingHole(pos: Vector2): Boolean {
+    fun isIn(tile: Char, pos: Vector2): Boolean {
         if (pos.x < 0 || pos.y < 0) return false
         val x = pos.x.toInt()
         val y = pos.y.toInt()
         if (x >= width || y >= height) return false
 
-        return maze[y][x] == 'h'
+        return maze[y][x] == tile
     }
 
     fun start() {
@@ -92,6 +88,22 @@ class Level(val ball: Ball, val onComplete: () -> Unit, val onDeath: () -> Unit)
                     'w' -> {
                         scope.drawRect(
                             color = Color.Gray,
+                            topLeft = Offset(x * scale, y * scale),
+                            size = Size(scale, scale)
+                        )
+                    }
+
+                    's' -> {
+                        scope.drawRect(
+                            color = Color.Red,
+                            topLeft = Offset(x * scale, y * scale),
+                            size = Size(scale, scale)
+                        )
+                    }
+
+                    'e' -> {
+                        scope.drawRect(
+                            color = Color.Green,
                             topLeft = Offset(x * scale, y * scale),
                             size = Size(scale, scale)
                         )
