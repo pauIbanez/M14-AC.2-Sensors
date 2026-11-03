@@ -4,6 +4,17 @@ import android.content.Context
 
 
 class LevelData(val tiles: List<String>) {
+    companion object {
+        fun load(context: Context, name: String) = LevelData(
+            context.assets.open("levels/$name").bufferedReader()
+                .readLines()
+                .filter { it.isNotBlank() }
+        )
+
+        fun list(context: Context) =
+            context.assets.list("levels")!!.sorted()
+    }
+
     val width = tiles[0].length.toFloat()
     val height = tiles.size.toFloat()
 
@@ -38,16 +49,5 @@ class LevelData(val tiles: List<String>) {
 
     operator fun get(x: Int, y: Int) = tiles[y][x]
 
-    companion object {
-        fun load(context: Context, name: String) = LevelData(
-            context.assets.open("levels/$name").bufferedReader()
-                .readLines()
-                .filter { it.isNotBlank() }
-        )
 
-        fun list(context: Context) =
-            context.assets.list("levels")!!.sorted()
-
-
-    }
 }

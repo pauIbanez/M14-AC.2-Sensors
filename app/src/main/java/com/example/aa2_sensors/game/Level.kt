@@ -26,4 +26,5 @@ class Level(val levelData: LevelData) {
             levelData.isHole(ball.pos) -> ball.startDying()
         }
     }
+
 }

@@ -7,27 +7,6 @@ import kotlin.math.min
 import kotlin.math.sqrt
 
 data class Vector2(var x: Float, var y: Float) {
-
-    val sqrMagnitude: Float get() = x * x + y * y
-    val magnitude: Float get() = sqrt(sqrMagnitude)
-
-    /** Unit-length copy of this vector, or zero if this vector has no length. */
-    val normalized: Vector2
-        get() {
-            val mag = magnitude
-            return if (mag > 0f) this / mag else zero
-        }
-
-    operator fun minus(o: Vector2): Vector2 = Vector2(x - o.x, y - o.y)
-    operator fun plus(o: Vector2): Vector2 = Vector2(x + o.x, y + o.y)
-    operator fun times(o: Vector2): Vector2 = Vector2(x * o.x, y * o.y)
-    operator fun div(o: Vector2): Vector2 = Vector2(x / o.x, y / o.y)
-
-    operator fun times(s: Float): Vector2 = Vector2(x * s, y * s)
-    operator fun div(s: Float): Vector2 = Vector2(x / s, y / s)
-
-    operator fun unaryMinus(): Vector2 = Vector2(-x, -y)
-
     companion object {
         val zero: Vector2 get() = Vector2(0f, 0f)
         val one: Vector2 get() = Vector2(1f, 1f)
@@ -81,6 +60,27 @@ data class Vector2(var x: Float, var y: Float) {
         fun min(a: Vector2, b: Vector2): Vector2 = Vector2(min(a.x, b.x), min(a.y, b.y))
         fun max(a: Vector2, b: Vector2): Vector2 = Vector2(max(a.x, b.x), max(a.y, b.y))
     }
+
+
+    val sqrMagnitude: Float get() = x * x + y * y
+    val magnitude: Float get() = sqrt(sqrMagnitude)
+
+    /** Unit-length copy of this vector, or zero if this vector has no length. */
+    val normalized: Vector2
+        get() {
+            val mag = magnitude
+            return if (mag > 0f) this / mag else zero
+        }
+
+    operator fun minus(o: Vector2): Vector2 = Vector2(x - o.x, y - o.y)
+    operator fun plus(o: Vector2): Vector2 = Vector2(x + o.x, y + o.y)
+    operator fun times(o: Vector2): Vector2 = Vector2(x * o.x, y * o.y)
+    operator fun div(o: Vector2): Vector2 = Vector2(x / o.x, y / o.y)
+
+    operator fun times(s: Float): Vector2 = Vector2(x * s, y * s)
+    operator fun div(s: Float): Vector2 = Vector2(x / s, y / s)
+
+    operator fun unaryMinus(): Vector2 = Vector2(-x, -y)
 }
 
 operator fun Float.times(v: Vector2): Vector2 = v * this
