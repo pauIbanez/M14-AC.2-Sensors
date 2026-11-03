@@ -16,11 +16,37 @@ class Ball(val radius: Float = 0.4f) {
 
     var pos by mutableStateOf(Vector2(0f, 0f))
     var isAlive by mutableStateOf(false)
+    var isDying = false
+    var drawnRadius by mutableStateOf(0f)
+    var deathAnimTime = 0f
+    val deathTime = 1f
+
+    init {
+        drawnRadius = radius
+    }
 
     private var vel = Vector2(0f, 0f)
 
     fun update(rot: Vector2, acceleration: Float, dt: Float, level: Level) {
-        if (!isAlive) return
+        if (!isAlive) {
+            if (!isDying) return
+            deathAnimTime += dt
+            if (deathAnimTime >= deathTime) {
+                isDying = false
+                drawnRadius = 0f
+                return
+            }
+            val prop = deathAnimTime / deathTime
+
+            val target = Vector2(pos.x.toInt().toFloat() + 0.5f, pos.y.toInt().toFloat() + 0.5f)
+            val ab = Vector2(target.x - pos.x, target.y - pos.y)
+            val abMag = sqrt(ab.x * ab.x + ab.y * ab.y)
+            val dir = Vector2(ab.x / abMag, ab.y / abMag)
+            pos = Vector2(pos.x + dir.x * 2f * dt, pos.y + dir.y * 2f * dt)
+            if (prop < 0.2f) return
+            drawnRadius = max(0f, drawnRadius - 0.6f * dt)
+            return
+        }
 
         vel = Vector2(vel.x + rot.y * acceleration * dt, vel.y + rot.x * acceleration * dt)
 
@@ -66,16 +92,19 @@ class Ball(val radius: Float = 0.4f) {
     }
 
     fun draw(scope: DrawScope, level: Level) {
-        if (!isAlive) return
         val scale = scope.size.width / level.width
-        scope.drawCircle(color = Color.Red, radius = radius * scale, center = Offset(pos.x * scale, pos.y * scale))
+        scope.drawCircle(color = Color.Red, radius = drawnRadius * scale, center = Offset(pos.x * scale, pos.y * scale))
     }
 
     fun live() {
+        drawnRadius = radius
         isAlive = true
+        isDying = false
     }
 
     fun die() {
+        deathAnimTime = 0f
         isAlive = false
+        isDying = true
     }
 }
