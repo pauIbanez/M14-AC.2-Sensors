@@ -6,12 +6,12 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 
-class Level {
+class Level(val ball: Ball) {
 
     val width = 19f
     val height = 13f
 
-    var start = Vector2(0f, 0f)
+    var startPos = Vector2(0f, 0f)
 
     val maze = arrayOf(
         arrayOf('w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'),
@@ -30,13 +30,13 @@ class Level {
     )
 
     init {
-        getStart()
+        getStartPos()
     }
 
-    private fun getStart() {
+    private fun getStartPos() {
         for ((y, row) in maze.withIndex()) {
             for ((x, cell) in row.withIndex()) {
-                if (cell == 's') start = Vector2(x + 0.5f, y + 0.5f)
+                if (cell == 's') startPos = Vector2(x + 0.5f, y + 0.5f)
             }
         }
     }
@@ -49,6 +49,10 @@ class Level {
         if (x >= width || y >= height) return true
 
         return maze[y][x] == 'w'
+    }
+
+    fun start() {
+        ball.pos = startPos
     }
 
 

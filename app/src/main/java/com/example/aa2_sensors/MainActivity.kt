@@ -29,13 +29,11 @@ data class Vector2(val x: Float, val y: Float)
 class MainActivity : ComponentActivity(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
 
-    private var level = Level()
-    private val ball = Ball(level.start)
+    private val ball = Ball()
+    private var level = Level(ball)
 
     private val acceleration = 1f
     private var rot: Vector2 = Vector2(0f, 0f)
-
-    // private var collisionMap = emptyArray<Array<Boolean>>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +44,8 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         val sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         if (sensor != null) sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+
+        level.start()
 
         enableEdgeToEdge()
         setContent {

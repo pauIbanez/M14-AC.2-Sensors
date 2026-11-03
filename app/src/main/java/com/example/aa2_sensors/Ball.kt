@@ -9,10 +9,10 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import kotlin.math.floor
 
 // Position, radius and velocity are in level units, not pixels
-class Ball(start: Vector2, val radius: Float = 0.4f) {
+class Ball(val radius: Float = 0.4f) {
     // Compose state, so the Canvas redraws when these change
 
-    var pos by mutableStateOf(Vector2(start.x, start.y))
+    var pos by mutableStateOf(Vector2(0f, 0f))
 
     private var vel = Vector2(0f, 0f)
 
