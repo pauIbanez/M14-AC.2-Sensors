@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                         )
                         Restart(
                             onClick = {
-                                level.start()
+                                level.restart()
                             }
                         )
                     }

@@ -13,6 +13,7 @@ class Level(val ball: Ball, val onComplete: () -> Unit, val onDeath: () -> Unit)
 
     var startPos = Vector2(0f, 0f)
     var attempts = 0
+    var isComplete = false
 
     val maze = arrayOf(
         arrayOf('w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'),
@@ -57,6 +58,12 @@ class Level(val ball: Ball, val onComplete: () -> Unit, val onDeath: () -> Unit)
         return maze[y][x] == tile
     }
 
+    fun restart() {
+        isComplete = false
+        attempts = 0
+        start()
+    }
+
     fun start() {
         ball.pos = startPos
         attempts++
@@ -64,7 +71,13 @@ class Level(val ball: Ball, val onComplete: () -> Unit, val onDeath: () -> Unit)
     }
 
     fun update() {
-        if (!ball.isAlive) return
+        if (!ball.isAlive || isComplete) return
+
+        if (isInEnd(ball.pos)) {
+            isComplete = true
+            onComplete()
+            return
+        }
 
         if (isTouchingHole(ball.pos)) {
             ball.die()
