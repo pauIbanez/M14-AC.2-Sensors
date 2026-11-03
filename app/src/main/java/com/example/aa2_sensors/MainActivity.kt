@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.withFrameNanos
@@ -61,6 +63,11 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                                 ball.draw(this, level)
                             }
                         )
+                        Restart(
+                            onClick = {
+                                level.start()
+                            }
+                        )
                     }
                 }
             }
@@ -75,6 +82,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
 
     fun onTick(dt: Float) {
+        level.update()
         ball.update(rot, acceleration, dt, level)
     }
 
@@ -103,5 +111,12 @@ fun Laberinth(level: Level, onTick: (dt: Float) -> Unit, onEnd: () -> Unit, onDr
 
     ) {
         onDraw()
+    }
+}
+
+@Composable
+fun Restart(onClick: () -> Unit) {
+    Button(onClick = onClick) {
+        Text("RESTART")
     }
 }

@@ -51,8 +51,26 @@ class Level(val ball: Ball) {
         return maze[y][x] == 'w'
     }
 
+    fun isTouchingHole(pos: Vector2): Boolean {
+        if (pos.x < 0 || pos.y < 0) return false
+        val x = pos.x.toInt()
+        val y = pos.y.toInt()
+        if (x >= width || y >= height) return false
+
+        return maze[y][x] == 'h'
+    }
+
     fun start() {
         ball.pos = startPos
+        ball.live()
+    }
+
+    fun update() {
+        if (!ball.isAlive) return
+
+        if (isTouchingHole(ball.pos)) {
+            ball.die()
+        }
     }
 
 

@@ -13,10 +13,13 @@ class Ball(val radius: Float = 0.4f) {
     // Compose state, so the Canvas redraws when these change
 
     var pos by mutableStateOf(Vector2(0f, 0f))
+    var isAlive by mutableStateOf(false)
 
     private var vel = Vector2(0f, 0f)
 
     fun update(rot: Vector2, acceleration: Float, dt: Float, level: Level) {
+        if (!isAlive) return
+
         vel = Vector2(vel.x + rot.y * acceleration * dt, vel.y + rot.x * acceleration * dt)
 
         val delta = Vector2(vel.x * dt, vel.y * dt)
@@ -65,7 +68,16 @@ class Ball(val radius: Float = 0.4f) {
     }
 
     fun draw(scope: DrawScope, level: Level) {
+        if (!isAlive) return
         val scale = scope.size.width / level.width
         scope.drawCircle(color = Color.Red, radius = radius * scale, center = Offset(pos.x * scale, pos.y * scale))
+    }
+
+    fun live() {
+        isAlive = true
+    }
+
+    fun die() {
+        isAlive = false
     }
 }
