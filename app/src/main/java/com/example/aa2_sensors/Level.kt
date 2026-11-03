@@ -1,10 +1,14 @@
 package com.example.aa2_sensors
 
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 
 class Level(val ball: Ball, val onComplete: () -> Unit, val onDeath: () -> Unit) {
 
@@ -12,22 +16,22 @@ class Level(val ball: Ball, val onComplete: () -> Unit, val onDeath: () -> Unit)
     val height = 13f
 
     var startPos = Vector2(0f, 0f)
-    var attempts = 0
+    var attempts by mutableStateOf(0)
     var isComplete = false
 
     val maze = arrayOf(
         arrayOf('w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'),
-        arrayOf('w', ' ', ' ', ' ', 'w', ' ', ' ', ' ', ' ', ' ', 'w', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'w'),
-        arrayOf('w', ' ', 'h', ' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w', 'w', 'w', 'w', 'w', ' ', 'w'),
-        arrayOf('s', ' ', ' ', ' ', ' ', ' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w', ' ', ' ', ' ', 'w', ' ', 'w'),
-        arrayOf('w', 'w', 'w', 'w', ' ', 'w', 'w', ' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w', 'w', 'w', ' ', 'w'),
-        arrayOf('w', ' ', ' ', ' ', ' ', ' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w', ' ', ' ', ' ', ' ', ' ', 'w'),
-        arrayOf('w', ' ', 'w', 'w', 'w', ' ', 'w', ' ', 'w', 'w', 'w', ' ', 'w', 'w', 'w', 'w', 'w', 'w', 'w'),
-        arrayOf('w', ' ', ' ', ' ', ' ', ' ', 'w', ' ', ' ', ' ', 'w', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'w'),
-        arrayOf('w', ' ', ' ', ' ', 'w', 'w', 'w', 'w', 'w', ' ', 'w', 'w', 'w', ' ', 'w', ' ', 'w', ' ', 'w'),
-        arrayOf('w', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'w', ' ', ' ', ' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w'),
-        arrayOf('w', ' ', 'h', ' ', 'h', 'w', 'w', ' ', 'w', 'w', 'w', ' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w'),
-        arrayOf('w', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'w', ' ', 'w', ' ', 'e'),
+        arrayOf('w', ' ', ' ', ' ', 'w', ' ', ' ', ' ', ' ', ' ', 'w', ' ', ' ', ' ', ' ', ' ', ' ', 'h', 'w'),
+        arrayOf('w', ' ', 'h', ' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w', ' ', ' ', 'h', ' ', ' ', 'w'),
+        arrayOf('s', ' ', ' ', ' ', ' ', ' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w', ' ', ' ', ' ', ' ', ' ', 'w'),
+        arrayOf('w', 'w', 'w', 'w', ' ', 'w', 'w', ' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w', 'w', ' ', ' ', 'w'),
+        arrayOf('w', ' ', ' ', ' ', ' ', ' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w', ' ', ' ', 'w', ' ', 'h', 'w'),
+        arrayOf('w', ' ', 'w', 'w', 'w', ' ', 'w', ' ', 'w', 'w', 'w', ' ', 'w', 'w', ' ', 'w', ' ', ' ', 'w'),
+        arrayOf('w', ' ', ' ', ' ', ' ', ' ', 'w', ' ', ' ', ' ', 'w', ' ', ' ', ' ', ' ', 'w', 'h', ' ', 'w'),
+        arrayOf('w', ' ', ' ', ' ', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', ' ', 'w', ' ', ' ', 'w'),
+        arrayOf('w', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'w', ' ', ' ', ' ', 'w', 'h', ' ', 'w', ' ', 'h', 'w'),
+        arrayOf('w', ' ', 'h', ' ', 'h', 'w', 'w', ' ', 'w', 'w', 'w', ' ', ' ', ' ', ' ', 'w', ' ', ' ', 'w'),
+        arrayOf('w', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'h', 'w', 'w', 'h', ' ', 'e'),
         arrayOf('w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w')
     )
 
@@ -66,7 +70,7 @@ class Level(val ball: Ball, val onComplete: () -> Unit, val onDeath: () -> Unit)
 
     fun start() {
         ball.pos = startPos
-        attempts++
+        attempts += 1
         ball.live()
     }
 
