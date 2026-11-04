@@ -10,9 +10,11 @@ import com.example.aa2_sensors.ui.screens.GameScreen
 import com.example.aa2_sensors.ui.screens.MenuScreen
 
 
+const val LEVEL_COUNT = 6
+
 sealed interface Screen {
     data object Menu : Screen
-    data class InGame(val levelName: String) : Screen
+    data class InGame(val levelId: Int) : Screen
 }
 
 @Composable
@@ -20,7 +22,13 @@ fun App() {
     var screen by remember { mutableStateOf<Screen>(Screen.Menu) }
 
     when (val current = screen) {
-        Screen.Menu -> MenuScreen(onPlay = { screen = Screen.InGame("level1") })
-        is Screen.InGame -> GameScreen(current.levelName, onExit = { screen = Screen.Menu })
+        Screen.Menu -> MenuScreen(onLevelClick = { id -> screen = Screen.InGame(id) })
+        is Screen.InGame -> GameScreen(
+            levelName = "level_${current.levelId}",
+            onExit = { screen = Screen.Menu },
+            onNextLevel = if (current.levelId < LEVEL_COUNT) {
+                { screen = Screen.InGame(current.levelId + 1) }
+            } else null
+        )
     }
 }

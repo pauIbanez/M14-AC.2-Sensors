@@ -1,7 +1,10 @@
 package com.example.aa2_sensors.ui.screens
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,7 +25,7 @@ import com.example.aa2_sensors.ui.game.GoBack
 import com.example.aa2_sensors.ui.game.Restart
 
 @Composable
-fun GameScreen(levelName: String, onExit: () -> Unit) {
+fun GameScreen(levelName: String, onExit: () -> Unit, onNextLevel: (() -> Unit)?) {
     val context = LocalContext.current
     var level by remember(levelName) {
         mutableStateOf(Level(LevelData.load(context, levelName)))
@@ -41,11 +44,25 @@ fun GameScreen(levelName: String, onExit: () -> Unit) {
 
     Box(Modifier.fillMaxSize()) {
         GameCanvas(level)
-        Restart(onClick = { level = Level(level.levelData) })
-        Attempts(level.attempts, Modifier.align(Alignment.TopEnd))
-        if (level.status == Status.Won) GoBack(
-            { onExit() },
-            modifier = Modifier.align(Alignment.Center)
-        )
+        when (level.status) {
+            Status.Won -> {
+                Column(Modifier.align(Alignment.Center)) {
+                    if (onNextLevel != null) {
+                        Button(onClick = onNextLevel) { Text("NEXT LEVEL") }
+                    }
+                    GoBack({ onExit() }, modifier = Modifier)
+                }
+            }
+
+            else -> {
+                Restart(onClick = { level = Level(level.levelData) })
+                Attempts(level.attempts, Modifier.align(Alignment.TopEnd))
+                GoBack(
+                    { onExit() },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                )
+            }
+        }
+
     }
 }
