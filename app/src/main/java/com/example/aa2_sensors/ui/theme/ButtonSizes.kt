@@ -10,19 +10,22 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
 
-data class ButtonSizes(val button: Dp, val playButton: Dp, val gap: Dp)
-
-val LocalButtonSizes = staticCompositionLocalOf<ButtonSizes> {
-    error("ButtonSizes not provided: wrap the UI in ProvideButtonSizes")
+data class ButtonSizes(val button: Dp, val playButton: Dp, val gap: Dp) {
+    companion object {
+        fun forHeight(height: Dp): ButtonSizes {
+            val button = (height * 0.18f).coerceIn(56.dp, 96.dp)
+            return ButtonSizes(button = button, playButton = button * 2, gap = button * 0.35f)
+        }
+    }
 }
 
-/** Works out the button sizes from the screen once, for everything inside [content]. */
-@Composable
-fun ProvideButtonSizes(content: @Composable () -> Unit) {
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val button = (maxHeight * 0.18f).coerceIn(56.dp, 96.dp)
-        val sizes = ButtonSizes(button = button, playButton = button * 2, gap = button * 0.35f)
+val LocalButtonSizes = staticCompositionLocalOf<ButtonSizes> {
+    error("ButtonSizes not provided: wrap the UI in WithButtonSizes")
+}
 
-        CompositionLocalProvider(LocalButtonSizes provides sizes, content = content)
+@Composable
+fun WithButtonSizes(content: @Composable () -> Unit) {
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        CompositionLocalProvider(LocalButtonSizes provides ButtonSizes.forHeight(maxHeight), content = content)
     }
 }

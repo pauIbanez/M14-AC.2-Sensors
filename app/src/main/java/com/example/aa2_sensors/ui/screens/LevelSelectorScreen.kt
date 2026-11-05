@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,10 +23,12 @@ import com.example.aa2_sensors.R
 import com.example.aa2_sensors.ui.theme.LocalButtonSizes
 
 @Composable
-fun LevelSelector(nOfLevels: Int, onLevelClick: (Int) -> Unit, onBack: () -> Unit) {
+fun LevelSelectorScreen(onLevelClick: (Int) -> Unit, onBack: () -> Unit) {
     val sizes = LocalButtonSizes.current
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        WoodBackground()
+
         Image(
             painter = painterResource(R.drawable.btn_close),
             contentDescription = "Quit",
@@ -38,22 +38,23 @@ fun LevelSelector(nOfLevels: Int, onLevelClick: (Int) -> Unit, onBack: () -> Uni
 
         )
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(sizes.gap),
-            modifier = Modifier.align(Alignment.Center)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(sizes.gap),
+        WithTitle("LEVEL SELECTOR", modifier = Modifier.align(Alignment.Center)) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(sizes.gap),
             ) {
-                for (id in 1..3) {
-                    LevelButton(id, onClick = { onLevelClick(id) })
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(sizes.gap),
+                ) {
+                    for (id in 1..3) {
+                        LevelButton(id, onClick = { onLevelClick(id) })
+                    }
                 }
-            }
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(sizes.gap)
-            ) {
-                for (id in 4..6) {
-                    LevelButton(id, onClick = { onLevelClick(id) })
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(sizes.gap)
+                ) {
+                    for (id in 4..6) {
+                        LevelButton(id, onClick = { onLevelClick(id) })
+                    }
                 }
             }
         }
