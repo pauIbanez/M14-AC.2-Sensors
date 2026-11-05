@@ -1,5 +1,6 @@
 package com.example.aa2_sensors.ui.screens
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +39,7 @@ fun MenuScreen(onPlay: () -> Unit, onShowLevels: () -> Unit) {
                     painter = painterResource(R.drawable.btn_close),
                     contentDescription = "Quit",
                     modifier = Modifier.size(buttonSize).clickable {
-                        //TODO: Quit app
+                        // No you don't
                     },
                 )
                 Image(
