@@ -77,7 +77,6 @@ fun MenuScreen(onLevelClick: (Int) -> Unit) {
                         modifier = Modifier.size(buttonSize).clickable {
                             //TODO: Quit app
                         },
-
                     )
                     Image(
                         painter = painterResource(R.drawable.btn_play),
