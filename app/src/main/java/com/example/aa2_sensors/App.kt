@@ -1,5 +1,7 @@
 package com.example.aa2_sensors
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -31,11 +33,16 @@ sealed interface Screen {
 fun App() {
     val navController = rememberNavController()
 
-    // Pops to the menu rather than one step back, so a double tap can't pop the menu itself
+
     val backToMenu: () -> Unit = { navController.popBackStack<Screen.Menu>(inclusive = false) }
 
     WithButtonSizes {
-        NavHost(navController, startDestination = Screen.Menu) {
+        NavHost(
+            navController,
+            startDestination = Screen.Menu,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+        ) {
             composable<Screen.Menu> {
                 MenuScreen(
                     onPlay = { navController.launchLevel(1) },
@@ -67,7 +74,7 @@ fun App() {
     }
 }
 
-/** Replaces any level already open, so going back never walks through finished levels. */
+
 private fun NavController.launchLevel(id: Int) {
     navigate(Screen.InGame(id)) {
         popUpTo<Screen.InGame> { inclusive = true }

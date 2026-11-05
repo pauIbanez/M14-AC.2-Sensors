@@ -45,10 +45,8 @@ class Ball(private val levelData: LevelData) {
             val prop = deathAnimTime / DEATH_TIME
 
             val target = Vector2(pos.x.toInt() + 0.5f, pos.y.toInt() + 0.5f)
-            if (Vector2.distance(target, pos) > 0.01f) {
-                val dir = (target - pos).normalized
-                pos += dir * 2f * dt
-            }
+            pos = Vector2.moveTowards(pos, target, 2f * dt)
+
 
             if (prop < 0.2f) return
             drawnRadius = max(0f, drawnRadius - 0.6f * dt)
