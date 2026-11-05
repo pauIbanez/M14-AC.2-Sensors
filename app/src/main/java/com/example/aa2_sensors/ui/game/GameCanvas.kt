@@ -3,9 +3,7 @@ package com.example.aa2_sensors.ui.game
 import androidx.compose.runtime.Composable
 import com.example.aa2_sensors.game.Level
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.CacheDrawScope
 import androidx.compose.ui.draw.drawWithCache
@@ -20,6 +18,10 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.translate
 import com.example.aa2_sensors.game.Ball
 import com.example.aa2_sensors.game.LevelData
+import com.example.aa2_sensors.ui.tiles.EndCarpet
+import com.example.aa2_sensors.ui.tiles.StartCarpet
+import com.example.aa2_sensors.ui.tiles.drawCarpetTile
+import com.example.aa2_sensors.ui.tiles.drawWoodHole
 import com.example.aa2_sensors.ui.tiles.drawWoodMap
 import kotlin.math.floor
 import kotlin.math.min
@@ -32,14 +34,12 @@ fun GameCanvas(level: Level) {
     Canvas(
         modifier = Modifier
             .fillMaxSize()
-            .wrapContentSize()
-            .aspectRatio(levelData.width / levelData.height)
             .drawWithCache {
                 val tileSize = tileSizeFor(levelData, size)
-                val board = bakeBoard(levelData, tileSize)
                 val origin = boardOrigin(levelData, size, tileSize)
+                val board = bakeBoard(levelData, tileSize, origin)
 
-                onDrawBehind { drawImage(board, topLeft = origin) }
+                onDrawBehind { drawImage(board) }
             }
     ) {
         val tileSize = tileSizeFor(levelData, size)
@@ -59,9 +59,9 @@ private fun boardOrigin(levelData: LevelData, area: Size, tileSize: Float) = Off
     y = floor((area.height - levelData.height * tileSize) / 2f)
 )
 
-private fun CacheDrawScope.bakeBoard(levelData: LevelData, tileSize: Float): ImageBitmap {
-    val width = (levelData.width * tileSize).toInt()
-    val height = (levelData.height * tileSize).toInt()
+private fun CacheDrawScope.bakeBoard(levelData: LevelData, tileSize: Float, origin: Offset): ImageBitmap {
+    val width = size.width.toInt()
+    val height = size.height.toInt()
     val board = ImageBitmap(width, height)
 
     CanvasDrawScope().draw(
@@ -70,8 +70,10 @@ private fun CacheDrawScope.bakeBoard(levelData: LevelData, tileSize: Float): Ima
         canvas = ImageCanvas(board),
         size = Size(width.toFloat(), height.toFloat())
     ) {
-        drawWoodMap(levelData.tiles, tileSize)
-        drawMarkers(levelData, tileSize)
+        drawWoodMap(levelData.tiles, tileSize, origin)
+        translate(origin.x, origin.y) {
+            drawMarkers(levelData, tileSize)
+        }
     }
 
     return board
@@ -80,30 +82,11 @@ private fun CacheDrawScope.bakeBoard(levelData: LevelData, tileSize: Float): Ima
 private fun DrawScope.drawMarkers(levelData: LevelData, scale: Float) {
     for ((y, row) in levelData.tiles.withIndex()) {
         for ((x, cell) in row.withIndex()) {
+            val topLeft = Offset(x * scale, y * scale)
             when (cell) {
-                's' -> {
-                    drawRect(
-                        color = Color.DarkGray,
-                        topLeft = Offset(x * scale, y * scale),
-                        size = Size(scale, scale)
-                    )
-                }
-
-                'e' -> {
-                    drawRect(
-                        color = Color.Green,
-                        topLeft = Offset(x * scale, y * scale),
-                        size = Size(scale, scale)
-                    )
-                }
-
-                'h' -> {
-                    drawCircle(
-                        color = Color.Black,
-                        radius = 0.5f * scale,
-                        center = Offset((x + 0.5f) * scale, (y + 0.5f) * scale),
-                    )
-                }
+                's' -> drawCarpetTile(StartCarpet, scale, topLeft)
+                'e' -> drawCarpetTile(EndCarpet, scale, topLeft)
+                'h' -> drawWoodHole(scale, topLeft)
             }
         }
     }

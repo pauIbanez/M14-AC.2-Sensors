@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathOperation
@@ -12,7 +13,9 @@ import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.translate
 import kotlin.math.PI
+import kotlin.math.ceil
 import kotlin.math.cos
+import kotlin.math.floor
 import kotlin.math.sin
 
 /**
@@ -34,9 +37,19 @@ private const val SHADOW_STEPS = 6
 private const val BEVEL_STEPS = 5
 private const val BEVEL_STEP_SIZE = 0.012f
 
-private val ShadowLayer = Color(0x1E000000)
+internal val ShadowLayer = Color(0x1E000000)
 private val BevelLight = Color(0x2EFFD9A0)
 private val BevelDark = Color(0x33200800)
+
+/** Wider than the ball, and with the lip it still ends on the tile's border. */
+private const val HOLE_RADIUS = 0.44f
+
+private const val HOLE_SHADOW_STEPS = 6
+private const val HOLE_SHADOW_STEP_SIZE = 0.025f
+
+/** Light enough for the inner shadow to show up on it. */
+private val HoleFloor = Color(0xFF3A2212)
+private val HoleShadow = Color(0x4D000000)
 
 @Composable
 fun WoodWallTile(mask: Int, modifier: Modifier = Modifier, worldX: Int = 0, worldY: Int = 0) {
@@ -54,9 +67,16 @@ fun WoodFloorTile(modifier: Modifier = Modifier, worldX: Int = 0, worldY: Int = 
 
 /**
  * Draws a map in the level file format: [wall] cells are walls, anything else is floor.
- * Keep [tileSize] a whole number of pixels, otherwise hairline gaps show between tiles.
+ * The map's top left corner sits at [origin], and walls carry on past the map until they
+ * fill the whole draw area.
+ * Keep [tileSize] and [origin] whole numbers of pixels, otherwise hairline gaps show between tiles.
  */
-fun DrawScope.drawWoodMap(rows: List<String>, tileSize: Float, wall: Char = 'w') {
+fun DrawScope.drawWoodMap(
+    rows: List<String>,
+    tileSize: Float,
+    origin: Offset = Offset.Zero,
+    wall: Char = 'w',
+) {
     val columns = rows.maxOf { it.length }
 
     // Off-map counts as wall, so the map's outer edge has no bevel
@@ -65,9 +85,14 @@ fun DrawScope.drawWoodMap(rows: List<String>, tileSize: Float, wall: Char = 'w')
         return rows[y].getOrNull(x) == wall
     }
 
-    for (y in rows.indices) {
-        for (x in 0 until columns) {
-            val topLeft = Offset(x * tileSize, y * tileSize)
+    val firstX = floor(-origin.x / tileSize).toInt()
+    val firstY = floor(-origin.y / tileSize).toInt()
+    val endX = ceil((size.width - origin.x) / tileSize).toInt()
+    val endY = ceil((size.height - origin.y) / tileSize).toInt()
+
+    for (y in firstY until endY) {
+        for (x in firstX until endX) {
+            val topLeft = origin + Offset(x * tileSize, y * tileSize)
             if (isWall(x, y)) {
                 drawWoodWallTile(blobMaskAt(x, y, ::isWall), x, y, tileSize, topLeft)
             } else {
@@ -97,6 +122,16 @@ fun DrawScope.drawWoodWallTile(
     tileSize: Float,
     topLeft: Offset = Offset.Zero,
 ) {
+    // Fully enclosed tiles have no visible edge, so the outline work would all be hidden
+    if (mask == Blob.ALL) {
+        translate(topLeft.x, topLeft.y) {
+            clipRect(0f, 0f, tileSize, tileSize) {
+                drawWood(WallWood, worldX, worldY, tileSize)
+            }
+        }
+        return
+    }
+
     val shape = wallShape(mask, tileSize)
 
     translate(topLeft.x, topLeft.y) {
@@ -108,6 +143,37 @@ fun DrawScope.drawWoodWallTile(
                 drawBevel(shape, tileSize)
             }
         }
+    }
+}
+
+/** Cuts a round hole into the floor. Draw it over a floor tile. */
+fun DrawScope.drawWoodHole(tileSize: Float, topLeft: Offset = Offset.Zero) {
+    val tileCenter = Offset(0.5f * tileSize, 0.5f * tileSize)
+    val radius = HOLE_RADIUS * tileSize
+    val hole = Path().apply { addOval(Rect(tileCenter, radius)) }
+
+    translate(topLeft.x, topLeft.y) {
+        drawHoleLip(tileCenter, radius, tileSize)
+        drawCircle(color = HoleFloor, radius = radius, center = tileCenter)
+        drawHoleShadow(hole, tileSize)
+    }
+}
+
+/** Stacked rings overlap the most next to the hole, so the floor darkens evenly as it slopes in. */
+private fun DrawScope.drawHoleLip(tileCenter: Offset, radius: Float, tileSize: Float) {
+    val step = BEVEL_STEP_SIZE * tileSize
+    for (layer in 1..BEVEL_STEPS) {
+        drawCircle(color = BevelDark, radius = radius + layer * step, center = tileCenter)
+    }
+}
+
+/** The light comes from the top left, so the rim on that side shades the inside of the hole. */
+private fun DrawScope.drawHoleShadow(hole: Path, tileSize: Float) {
+    val step = HOLE_SHADOW_STEP_SIZE * tileSize
+    for (layer in 1..HOLE_SHADOW_STEPS) {
+        val offset = layer * step
+        val shadow = Path.combine(PathOperation.Difference, hole, hole.shifted(offset, offset))
+        drawPath(shadow, color = HoleShadow)
     }
 }
 

@@ -23,6 +23,7 @@ import com.example.aa2_sensors.ui.game.Attempts
 import com.example.aa2_sensors.ui.game.GameCanvas
 import com.example.aa2_sensors.ui.game.GoBack
 import com.example.aa2_sensors.ui.game.Restart
+import com.example.aa2_sensors.ui.menu.WoodBackground
 
 @Composable
 fun GameScreen(levelName: String, onExit: () -> Unit, onNextLevel: (() -> Unit)?) {

@@ -16,6 +16,7 @@ object Blob {
     const val SW = 32
     const val W = 64
     const val NW = 128
+    const val ALL = 255
 }
 
 fun Int.hasBit(bit: Int): Boolean = (this and bit) != 0
