@@ -1,4 +1,4 @@
-package com.example.aa2_sensors.ui.menu
+package com.example.aa2_sensors.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -20,6 +20,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.aa2_sensors.R
+import com.example.aa2_sensors.ui.elements.ImageButton
+import com.example.aa2_sensors.ui.elements.TextButton
+import com.example.aa2_sensors.ui.elements.WithTitle
+import com.example.aa2_sensors.ui.menu.WoodBackground
 import com.example.aa2_sensors.ui.theme.LocalButtonSizes
 
 @Composable
@@ -29,14 +33,8 @@ fun LevelSelectorScreen(onLevelClick: (Int) -> Unit, onBack: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         WoodBackground()
 
-        Image(
-            painter = painterResource(R.drawable.btn_close),
-            contentDescription = "Quit",
-            modifier = Modifier.size(sizes.button).align(Alignment.TopStart).padding(10.dp).clickable {
-                onBack()
-            },
+        ImageButton(R.drawable.btn_close, "Menu", onBack, Modifier.align(Alignment.TopStart).padding(10.dp))
 
-        )
 
         WithTitle("LEVEL SELECTOR", modifier = Modifier.align(Alignment.Center)) {
             Column(
@@ -66,18 +64,19 @@ fun LevelButton(id: Int, onClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
     ) {
-        Image(
-            painter = painterResource(R.drawable.btn_blank),
-            contentDescription = "Level $id",
-            modifier = Modifier.size(LocalButtonSizes.current.button).clickable {
-                onClick()
-            },
-        )
-        Text(
-            id.toString(), textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Black,
-            fontSize = 30.sp,
-            color = Color(0xFF571A00)
-        )
+        TextButton(id.toString(), onClick, "Level $id")
+        // Image(
+        //     painter = painterResource(R.drawable.btn_blank),
+        //     contentDescription = "Level $id",
+        //     modifier = Modifier.size(LocalButtonSizes.current.button).clickable {
+        //         onClick()
+        //     },
+        // )
+        // Text(
+        //     id.toString(), textAlign = TextAlign.Center,
+        //     fontWeight = FontWeight.Black,
+        //     fontSize = 30.sp,
+        //     color = Color(0xFF571A00)
+        // )
     }
 }

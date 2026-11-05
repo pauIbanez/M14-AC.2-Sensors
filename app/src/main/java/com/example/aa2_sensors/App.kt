@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.aa2_sensors.ui.menu.LevelSelectorScreen
+import com.example.aa2_sensors.ui.screens.LevelSelectorScreen
 import com.example.aa2_sensors.ui.screens.GameScreen
 import com.example.aa2_sensors.ui.screens.MenuScreen
 import com.example.aa2_sensors.ui.theme.WithButtonSizes

@@ -19,11 +19,12 @@ import com.example.aa2_sensors.game.Level
 import com.example.aa2_sensors.game.LevelData
 import com.example.aa2_sensors.game.Status
 import com.example.aa2_sensors.sensors.rememberAccelerometer
+import com.example.aa2_sensors.ui.elements.LongTextButton
 import com.example.aa2_sensors.ui.game.Attempts
 import com.example.aa2_sensors.ui.game.GameCanvas
 import com.example.aa2_sensors.ui.game.GoBack
+import com.example.aa2_sensors.ui.game.HomeButton
 import com.example.aa2_sensors.ui.game.Marble
-import com.example.aa2_sensors.ui.game.Restart
 import com.example.aa2_sensors.ui.menu.WoodBackground
 
 @Composable
@@ -53,19 +54,15 @@ fun GameScreen(levelName: String, onExit: () -> Unit, onNextLevel: (() -> Unit)?
             Status.Won -> {
                 Column(Modifier.align(Alignment.Center)) {
                     if (onNextLevel != null) {
-                        Button(onClick = onNextLevel) { Text("NEXT LEVEL") }
+                        LongTextButton("NEXT LEVEL", onNextLevel)
                     }
-                    GoBack({ onExit() }, modifier = Modifier)
+                    HomeButton(onExit)
                 }
             }
 
             else -> {
-                Restart(onClick = { level = Level(level.levelData) })
-                Attempts(level.attempts, Modifier.align(Alignment.TopEnd))
-                GoBack(
-                    { onExit() },
-                    modifier = Modifier.align(Alignment.TopEnd)
-                )
+                Attempts(level.attempts)
+                GoBack(onExit)
             }
         }
 
