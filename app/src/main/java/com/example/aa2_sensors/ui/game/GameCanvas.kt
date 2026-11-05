@@ -11,12 +11,10 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Canvas as ImageCanvas
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.translate
-import com.example.aa2_sensors.game.Ball
 import com.example.aa2_sensors.game.LevelData
 import com.example.aa2_sensors.ui.tiles.EndCarpet
 import com.example.aa2_sensors.ui.tiles.StartCarpet
@@ -28,7 +26,7 @@ import kotlin.math.min
 
 
 @Composable
-fun GameCanvas(level: Level) {
+fun GameCanvas(level: Level, marble: Marble) {
     val levelData = level.levelData
 
     Canvas(
@@ -46,7 +44,7 @@ fun GameCanvas(level: Level) {
         val origin = boardOrigin(levelData, size, tileSize)
 
         translate(origin.x, origin.y) {
-            drawBall(level.ball, tileSize)
+            drawMarble(marble, level.ball, tileSize)
         }
     }
 }
@@ -90,12 +88,4 @@ private fun DrawScope.drawMarkers(levelData: LevelData, scale: Float) {
             }
         }
     }
-}
-
-private fun DrawScope.drawBall(ball: Ball, scale: Float) {
-    drawCircle(
-        color = Color.Red,
-        radius = ball.drawnRadius * scale,
-        center = Offset(ball.pos.x * scale, ball.pos.y * scale)
-    )
 }

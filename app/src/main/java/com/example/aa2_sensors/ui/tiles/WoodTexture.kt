@@ -53,7 +53,7 @@ val FloorWood = WoodStyle(
 
 /** One seamless slab in the orange tone of the menu buttons. */
 val WallWood = WoodStyle(
-    tones = listOf(Color(0xFFC8641C)),
+    tones = listOf(Color(0xFF8a491f)),
     grainDark = Color(0x666E2A0A),
     grainLight = Color(0x40FFB65C),
     seam = null,

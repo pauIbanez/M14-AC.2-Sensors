@@ -22,6 +22,7 @@ import com.example.aa2_sensors.sensors.rememberAccelerometer
 import com.example.aa2_sensors.ui.game.Attempts
 import com.example.aa2_sensors.ui.game.GameCanvas
 import com.example.aa2_sensors.ui.game.GoBack
+import com.example.aa2_sensors.ui.game.Marble
 import com.example.aa2_sensors.ui.game.Restart
 import com.example.aa2_sensors.ui.menu.WoodBackground
 
@@ -32,19 +33,22 @@ fun GameScreen(levelName: String, onExit: () -> Unit, onNextLevel: (() -> Unit)?
         mutableStateOf(Level(LevelData.load(context, levelName)))
     }
     val accelerometer = rememberAccelerometer()
+    val marble = remember { Marble() }
 
     LaunchedEffect(level) {
         var last = withFrameNanos { it }
         while (true) {
             withFrameNanos { now ->
-                level.tick(accelerometer.rot, (now - last) / 1_000_000_000f)
+                val dt = (now - last) / 1_000_000_000f
+                level.tick(accelerometer.rot, dt)
+                marble.updateLight(accelerometer.rot, dt)
                 last = now
             }
         }
     }
 
     Box(Modifier.fillMaxSize()) {
-        GameCanvas(level)
+        GameCanvas(level, marble)
         when (level.status) {
             Status.Won -> {
                 Column(Modifier.align(Alignment.Center)) {

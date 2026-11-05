@@ -66,7 +66,6 @@ fun MenuScreen(onLevelClick: (Int) -> Unit) {
                 }
 
 
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(buttonGap),
                     verticalAlignment = Alignment.CenterVertically
