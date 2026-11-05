@@ -8,13 +8,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.aa2_sensors.ui.theme.LocalButtonSizes
 import com.example.aa2_sensors.R
@@ -33,18 +37,21 @@ fun WithTitle(
     ) {
         Box(
             contentAlignment = Alignment.Center,
+            modifier = Modifier.height(buttonSize).widthIn(min = buttonSize * 3),
         ) {
             Image(
                 painter = painterResource(R.drawable.btn_long),
                 contentDescription = "Title",
-                modifier = Modifier.height(buttonSize)
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.matchParentSize()
             )
             Text(
                 title,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Black,
                 fontSize = 30.sp,
-                color = Color(0xFF571A00)
+                color = Color(0xFF571A00),
+                modifier = Modifier.padding(horizontal = 24.dp)
             )
         }
         content()
