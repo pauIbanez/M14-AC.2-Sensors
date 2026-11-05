@@ -34,7 +34,6 @@ class LevelData(val tiles: List<String>) {
     }
 
     fun isEnd(pos: Vector2): Boolean = isIn('e', pos)
-    fun isHole(pos: Vector2): Boolean = isIn('h', pos)
     fun isWall(pos: Vector2): Boolean = isIn('w', pos)
 
 
@@ -45,6 +44,16 @@ class LevelData(val tiles: List<String>) {
         if (x >= width || y >= height) return false
 
         return tiles[y][x] == tile
+    }
+
+    fun isHole(pos: Vector2): Boolean {
+        if (!isIn('h', pos)) return false
+
+        val tileX = pos.x.toInt().toFloat()
+        val tileY = pos.y.toInt().toFloat()
+        val tileCenter = Vector2(tileX, tileY) + Vector2(0.5f, 0.5f)
+
+        return Vector2.distance(tileCenter, pos) < Ball.RADIUS
     }
 
     operator fun get(x: Int, y: Int) = tiles[y][x]

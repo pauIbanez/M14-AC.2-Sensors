@@ -2,7 +2,8 @@
     "folders": [
         { "name": "Project", "path": "." },
         { "name": "src", "path": "app/src/main/java/com/example/aa2_sensors" },
-        { "name": "assets", "path": "app/src/main/assets" },
+        { "name": "Assets", "path": "app/src/main/assets" },
+        { "name": "Drawables", "path": "app/src/main/res/drawable" },
     ],
     "settings": {
         // Hidden from the Explorer (and from search). Delete a line to show that item again.
