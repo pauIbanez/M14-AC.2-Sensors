@@ -16,9 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.example.aa2_sensors.R
-import com.example.aa2_sensors.ui.menu.LevelSelectorScreen
+import com.example.aa2_sensors.ui.elements.WithTitle
 import com.example.aa2_sensors.ui.menu.WoodBackground
-import com.example.aa2_sensors.ui.menu.WithTitle
 import com.example.aa2_sensors.ui.theme.LocalButtonSizes
 
 

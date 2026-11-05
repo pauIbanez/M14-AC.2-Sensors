@@ -63,7 +63,7 @@ fun App() {
                 val levelId = entry.toRoute<Screen.InGame>().levelId
 
                 GameScreen(
-                    levelName = "level_$levelId",
+                    levelName = "level $levelId",
                     onExit = backToMenu,
                     onNextLevel = if (levelId < LEVEL_COUNT) {
                         { navController.launchLevel(levelId + 1) }

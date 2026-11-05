@@ -32,10 +32,10 @@ fun BoxScope.Attempts(nOfAtt: Int) {
 
 @Composable
 fun BoxScope.GoBack(onClick: () -> Unit) {
-    HomeButton(onClick, Modifier.align(Alignment.TopEnd))
+    HomeButton(onClick, Modifier.align(Alignment.TopStart).padding(10.dp))
 }
 
 @Composable
 fun HomeButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    ImageButton(R.drawable.btn_pause, "Home", onClick, modifier) // TODO: Change sprite
+    ImageButton(R.drawable.btn_close, "Home", onClick, modifier) // TODO: Change sprite
 }
